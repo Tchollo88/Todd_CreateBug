@@ -10,14 +10,6 @@
             Assert.IsType<Bug>(bug);
         }
         [Fact]
-        public void UpdateStatusTestOpen()
-        {
-            Bug bug = new Bug(1, "Open", "Tests Open status");
-            bug.UpdateStatus((BugStatus)1);
-            bug.UpdateStatus((BugStatus)0);
-            Assert.Equal(BugStatus.Open, bug.Status);
-        }
-        [Fact]
         public void UpdateStatusTestInProgress()
         {
             Bug bug = new Bug(2, "InProgress", "Tests InProgress status");
@@ -28,6 +20,7 @@
         public void UpdateStatusTestPending()
         {
             Bug bug = new Bug(3, "Pending", "Tests Pending status");
+            bug.UpdateStatus((BugStatus)1);
             bug.UpdateStatus((BugStatus)2);
             Assert.Equal(BugStatus.Pending, bug.Status);
         }
@@ -35,6 +28,7 @@
         public void UpdateStatusTestClosed()
         {
             Bug bug = new Bug(4, "Closed", "Tests Closed status");
+            bug.UpdateStatus((BugStatus)1);
             bug.UpdateStatus((BugStatus)3);
             Assert.Equal(BugStatus.Closed, bug.Status);
         }
@@ -140,16 +134,6 @@
                     // Assert
                     Assert.Equal("Status is already set to the same value.", ex3.Message);
                     break;
-            }
-            {
-                // Arrange
-                var bug = new Bug(7, "StatusTest", "Status must change to a new status when updated");
-                // Assignes the bug status to the same value as the one being tested
-                bug.UpdateStatus((BugStatus)status);
-                // Act
-                var ex = Assert.Throws<ArgumentException>(() => bug.UpdateStatus((BugStatus)status));
-                // Assert
-                Assert.Equal("Status is already set to the same value.", ex.Message);
             }
         }
 

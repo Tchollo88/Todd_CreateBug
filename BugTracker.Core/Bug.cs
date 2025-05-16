@@ -26,7 +26,29 @@
             if (newStatus == Status)
                 throw new ArgumentException("Status is already set to the same value.");
             else
-                Status = newStatus;
+            {
+                switch (newStatus)
+                {
+                    case BugStatus.Closed:
+                        if (Status == BugStatus.InProgress || Status == BugStatus.Pending)
+                        {
+                            Status = newStatus;
+                        }
+                        break;
+                    case BugStatus.InProgress:
+                        if (Status == BugStatus.Open || Status == BugStatus.Pending)
+                        {
+                            Status = newStatus;
+                        }
+                        break;
+                    case BugStatus.Pending:
+                        if (Status == BugStatus.InProgress)
+                        {
+                            Status = newStatus;
+                        }
+                        break;
+                }
+            }
         }
 
         public void UpdateAssignedToDeveloper(string developer)
@@ -38,7 +60,7 @@
     {
         Open,
         InProgress,
-        Resolved,
+        Pending,
         Closed
     }
 }

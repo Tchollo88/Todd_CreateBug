@@ -30,7 +30,7 @@
             AssignedToDeveloper = null;
         }
 
-    #region ** Update Methods **
+    #region ** Changing Data Methods **
         // Update the bug's status or checks if Status already exisits *
         public void UpdateStatus(BugStatus newStatus)
         {

@@ -91,50 +91,32 @@
         [InlineData(3)]
         public void UpdateStatus_ToSameStatus_ThrowsArgumentException(int status)
         {
+            // Arrange
+            var bug = new Bug(7, "StatusTest", "Status must change to a new status when updated");
             switch (status)
             {
                 case 0:
-                    // Arrange
-                    var bug0 = new Bug(7, "StatusTest", "Status must change to a new status when updated");
-                    // Act
-                    var ex0 = Assert.Throws<ArgumentException>(() => bug0.UpdateStatus((BugStatus)status));
-                    // Assert
-                    Assert.Equal("Status is already set to the same value.", ex0.Message);
                     break;
                 case 1:
-                    // Arrange
-                    var bug1 = new Bug(7, "StatusTest", "Status must change to a new status when updated");
                     // Assignes the bug status to the same value as the one being tested
-                    bug1.UpdateStatus((BugStatus)status);
-                    // Act
-                    var ex1 = Assert.Throws<ArgumentException>(() => bug1.UpdateStatus((BugStatus)status));
-                    // Assert
-                    Assert.Equal("Status is already set to the same value.", ex1.Message);
+                    bug.UpdateStatus((BugStatus)status);
                     break;
                 case 2:
-                    // Arrange
-                    var bug2 = new Bug(7, "StatusTest", "Status must change to a new status when updated");
                     // Assignes the bug status to the same value as the one being tested
-                    bug2.UpdateStatus((BugStatus)1);
-                    bug2.UpdateStatus((BugStatus)status);
-                    // Act
-                    var ex2 = Assert.Throws<ArgumentException>(() => bug2.UpdateStatus((BugStatus)status));
-                    // Assert
-                    Assert.Equal("Status is already set to the same value.", ex2.Message);
+                    bug.UpdateStatus((BugStatus)1);
+                    bug.UpdateStatus((BugStatus)status);
                     break;
                 case 3:
-                    // Arrange
-                    var bug3 = new Bug(7, "StatusTest", "Status must change to a new status when updated");
                     // Assignes the bug status to the same value as the one being tested
-                    bug3.UpdateStatus((BugStatus)1);
-                    bug3.UpdateStatus((BugStatus)2);
-                    bug3.UpdateStatus((BugStatus)status);
-                    // Act
-                    var ex3 = Assert.Throws<ArgumentException>(() => bug3.UpdateStatus((BugStatus)status));
-                    // Assert
-                    Assert.Equal("Status is already set to the same value.", ex3.Message);
+                    bug.UpdateStatus((BugStatus)1);
+                    bug.UpdateStatus((BugStatus)2);
+                    bug.UpdateStatus((BugStatus)status);
                     break;
             }
+            // Act
+            var ex = Assert.Throws<ArgumentException>(() => bug.UpdateStatus((BugStatus)status));
+            // Assert
+            Assert.Equal("Status is already set to the same value.", ex.Message);
         }
 
         [Fact]

@@ -6,6 +6,12 @@ namespace BugTracker.Core
     {
         private readonly List<Bug> _bugs = new List<Bug>(); //Saved bugs in a list
 
+        public List<Bug> getBugs
+        {
+            get { return _bugs; }
+        }
+
+
         // Method to add a bug to the list of bugs *
         public Bug CreateBug(string title, string description, int priority, int severity)
         {

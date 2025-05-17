@@ -132,7 +132,7 @@ namespace BugTracker.Core
             _output.WriteLine("What is the bugs priority? (0 = Low, 1 = Medium, 2 = High)");
             string priorityInput = Console.ReadLine();
             
-            if (!int.TryParse(priorityInput, out int parsedPriority) || parsedPriority < 0 || parsedPriority > 1)
+            if (!int.TryParse(priorityInput, out int parsedPriority) || parsedPriority < 0 || parsedPriority > 2)
             {// checks if the input is a number and if it is between 1 and 3
                 // if not, it will return an error message
                 _output.WriteLine("Invalid input. Please enter a number between 0 and 2.");

@@ -10,28 +10,31 @@
             Bug bug = new Bug(0, "Constructor", "Valid constructor test", 0, 1);
             Assert.IsType<Bug>(bug);
         }
-        [Fact]
-        public void UpdateStatusTestInProgress()
-        {
-            Bug bug = new Bug(2, "InProgress", "Tests InProgress status");
-            bug.UpdateStatus((BugStatus)1);
-            Assert.Equal(BugStatus.InProgress, bug.Status);
-        }
-        [Fact]
-        public void UpdateStatusTestPending()
-        {
-            Bug bug = new Bug(3, "Pending", "Tests Pending status");
-            bug.UpdateStatus((BugStatus)1);
-            bug.UpdateStatus((BugStatus)2);
-            Assert.Equal(BugStatus.Pending, bug.Status);
-        }
-        [Fact]
+
+        [Fact] // checks to see if status is changed to closed status
         public void UpdateStatusTestClosed()
         {
-            Bug bug = new Bug(4, "Closed", "Tests Closed status");
+            Bug bug = new Bug(4, "Closed", "Tests Closed status", 0, 0);
             bug.UpdateStatus((BugStatus)1);
             bug.UpdateStatus((BugStatus)3);
             Assert.Equal(BugStatus.Closed, bug.Status);
+        }
+
+        [Fact] // checks to see if status is changed to inprogress status
+        public void UpdateStatusTestInProgress()
+        {
+            Bug bug = new Bug(2, "InProgress", "Tests InProgress status", 1, 1);
+            bug.UpdateStatus((BugStatus)1);
+            Assert.Equal(BugStatus.InProgress, bug.Status);
+        }
+
+        [Fact] // checks to see if status is changed to pending status
+        public void UpdateStatusTestPending()
+        {
+            Bug bug = new Bug(3, "Pending", "Tests Resolved status", 0, 0);
+            bug.UpdateStatus((BugStatus)1);
+            bug.UpdateStatus((BugStatus)2);
+            Assert.Equal(BugStatus.Pending, bug.Status);
         }
 
         [Fact] // checks to see if the constructor initializes correctly
@@ -62,38 +65,6 @@
         }
         #endregion
         #region ** UpdateStatus Tests **
-        [Fact] // checks to see if status is changed to open status
-        public void UpdateStatusTestOpen()
-        {
-            Bug bug = new Bug(1, "Open", "Tests Open status", 0, 1);
-            bug.UpdateStatus((BugStatus)1);
-            bug.UpdateStatus((BugStatus)0);
-            Assert.Equal(BugStatus.Open, bug.Status);
-        }
-
-        [Fact] // checks to see if status is changed to inprogress status
-        public void UpdateStatusTestInProgress()
-        {
-            Bug bug = new Bug(2, "InProgress", "Tests InProgress status", 1, 1);
-            bug.UpdateStatus((BugStatus)1);
-            Assert.Equal(BugStatus.InProgress, bug.Status);
-        }
-
-        [Fact] // checks to see if status is changed to pending status
-        public void UpdateStatusTestPending()
-        {
-            Bug bug = new Bug(3, "Pending", "Tests Resolved status", 0, 0);
-            bug.UpdateStatus((BugStatus)2);
-            Assert.Equal(BugStatus.Pending, bug.Status);
-        }
-
-        [Fact] // checks to see if status is changed to closed status
-        public void UpdateStatusTestClosed()
-        {
-            Bug bug = new Bug(4, "Closed", "Tests Closed status", 0, 0);
-            bug.UpdateStatus((BugStatus)3);
-            Assert.Equal(BugStatus.Closed, bug.Status);
-        }
 
         [Fact] // checks to see if status is changed to new status
         public void UpdateStatus_ChangesStatus_ToNewStatus()
@@ -129,7 +100,7 @@
         public void UpdateStatus_ToSameStatus_ThrowsArgumentException(int status)
         {
             // Arrange
-            var bug = new Bug(7, "StatusTest", "Status must change to a new status when updated");
+            var bug = new Bug(7, "StatusTest", "Status must change to a new status when updated", 0, 1);
             switch (status)
             {
                 case 0:
@@ -302,7 +273,7 @@
         public void StatusChange_OpenToInProgress_ShouldChange()
         {
             // Arrange
-            var bug = new Bug(10, "OpenToInProgress", "Should succeed");
+            var bug = new Bug(10, "OpenToInProgress", "Should succeed", 0, 1);
 
             // Act
             bug.UpdateStatus(BugStatus.InProgress);
@@ -317,7 +288,7 @@
         public void StatusChange_InProgressToPendingOrClosed_ShouldChange(BugStatus bugStatus)
         {
             // Arrange
-            var bug = new Bug(11, "InProgressToPendingOrClosed", "Should succeed");
+            var bug = new Bug(11, "InProgressToPendingOrClosed", "Should succeed", 0, 1);
 
             // Act
             bug.UpdateStatus(BugStatus.InProgress);
@@ -333,7 +304,7 @@
         public void StatusChange_PendingToInProgressOrClosed_ShouldChange(BugStatus bugStatus)
         {
             // Arrange
-            var bug = new Bug(12, "PendingToInProgressOrClosed", "Should succeed");
+            var bug = new Bug(12, "PendingToInProgressOrClosed", "Should succeed", 0, 1);
 
             // Act
             bug.UpdateStatus(BugStatus.InProgress);
@@ -350,7 +321,7 @@
         public void StatusChange_ClosedToOpenOrPending_ShouldNotChange(BugStatus bugStatus)
         {
             // Arrange
-            var bug = new Bug(13, "ClosedToOpenOrPending", "Should not succeed");
+            var bug = new Bug(13, "ClosedToOpenOrPending", "Should not succeed", 0, 1);
 
             // Act
             bug.UpdateStatus(BugStatus.InProgress);

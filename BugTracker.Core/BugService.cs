@@ -19,5 +19,10 @@ namespace BugTracker.Core
             _bugs.Add(bug);
             return bug;
         }
+        // ToDo: View list of bugs should manipulate the list of bugs and display them in a user friendly way
+
+        // ToDo: Add to developer service should assign to developer and then check if status is open or not, if open set to in progress
+
+        // ToDo: Delete bug from list
     }
 }

@@ -80,13 +80,13 @@ namespace BugTracker.Core
             _output.WriteLine("==========================================");
             _output.WriteLine("|               BUG  TICKET              |");
             _output.WriteLine("==========================================");
-            _output.WriteLine($"| Bug ID:                {bug.BugId,-18}|");
-            _output.WriteLine($"| Title:                 {bug.Title,-18}|");
-            _output.WriteLine($"| Description:           {Truncate(bug.Description, 18),-18}|");
-            _output.WriteLine($"| Priority:              {bug.Priority,-18}|");
-            _output.WriteLine($"| Severity:              {bug.Severity,-18}|");
-            _output.WriteLine($"| Status:                {bug.Status,-18}|");
-            _output.WriteLine($"| Assigned To Developer: {bug.AssignedToDeveloper,-18}|");
+            _output.WriteLine($"| Bug ID:                {bug.BugId,-16}|");
+            _output.WriteLine($"| Title:                 {bug.Title,-16}|");
+            _output.WriteLine($"| Description:           {Truncate(bug.Description, 18),-16}|");
+            _output.WriteLine($"| Priority:              {bug.Priority,-16}|");
+            _output.WriteLine($"| Severity:              {bug.Severity,-16}|");
+            _output.WriteLine($"| Status:                {bug.Status,-16}|");
+            _output.WriteLine($"| Assigned To Developer: {bug.AssignedToDeveloper,-16}|");
             _output.WriteLine("==========================================");
             if (!skipClear)
             {
@@ -105,7 +105,7 @@ namespace BugTracker.Core
                 return text.Substring(0, maxLength - 3) + "...";
             }
             return text;
-        }                                                    // provider
+        }                                                   
         #endregion
 
         #endregion
@@ -129,26 +129,31 @@ namespace BugTracker.Core
 
             if (!skipClear)
             { Console.Clear(); }
-            _output.WriteLine("What is the bugs priority? (1 = Low, 2 = Medium, 3 = High)");
+            _output.WriteLine("What is the bugs priority? (0 = Low, 1 = Medium, 2 = High)");
             string priorityInput = Console.ReadLine();
             
-            if (!int.TryParse(priorityInput, out int parsedPriority) || parsedPriority < 1 || parsedPriority > 3)
+            if (!int.TryParse(priorityInput, out int parsedPriority) || parsedPriority < 0 || parsedPriority > 1)
             {// checks if the input is a number and if it is between 1 and 3
                 // if not, it will return an error message
-                _output.WriteLine("Invalid input. Please enter a number between 1 and 3.");
+                _output.WriteLine("Invalid input. Please enter a number between 0 and 2.");
+                _output.WriteLine("Press any key to coninue.");
+                Console.ReadKey();
+
                 return;
             }
              int priority = parsedPriority;
 
             if (!skipClear)
             { Console.Clear(); }
-            _output.WriteLine("What is the bugs severity? (1 = Trivial, 2 = Minor, 3 = Major, 4 = Critical)");
+            _output.WriteLine("What is the bugs severity? (0 = Trivial, 1 = Minor, 2 = Major, 3 = Critical)");
             string severityInput = Console.ReadLine();
             
-            if (!int.TryParse(severityInput, out int parsedSeverity) || parsedSeverity < 1 || parsedSeverity > 4)
+            if (!int.TryParse(severityInput, out int parsedSeverity) || parsedSeverity < 0 || parsedSeverity > 3)
             {// checks if the input is a number and if it is between 1 and 4
                 // if not, it will return an error message
-                _output.WriteLine("Invalid input. Please enter a number between 1 and 4.");
+                _output.WriteLine("Invalid input. Please enter a number between 0 and 3.");
+                _output.WriteLine("Press any key to coninue.");
+                Console.ReadKey();
                 return;
             }
             int severity = parsedSeverity;

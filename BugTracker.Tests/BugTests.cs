@@ -3,10 +3,11 @@
     using BugTracker.Core;
     public class BugTests
     {
-        [Fact]
+        #region ** Constructor Tests **
+        [Fact] // checks to see if the constructor is valid
         public void ValidConstructorTest()
         {
-            Bug bug = new Bug(0,"Constructor","Valid constructor test");
+            Bug bug = new Bug(0, "Constructor", "Valid constructor test", 0, 1);
             Assert.IsType<Bug>(bug);
         }
         [Fact]
@@ -33,36 +34,72 @@
             Assert.Equal(BugStatus.Closed, bug.Status);
         }
 
-        [Fact]
+        [Fact] // checks to see if the constructor initializes correctly
         public void Constructor_ValidInput_InitializesCorrectly()
         {
             // Arrange & Act
-            var bug = new Bug(5, "Login fails", "Fails with correct credentials");
+            var bug = new Bug(5, "Login fails", "Fails with correct credentials", 2, 3);
 
             // Assert
             Assert.Equal(5, bug.BugId);
             Assert.Equal("Login fails", bug.Title);
             Assert.Equal("Fails with correct credentials", bug.Description);
+            Assert.Equal(BugPriority.High, bug.Priority);
+            Assert.Equal(BugSeverity.Critical, bug.Severity);
             Assert.Equal(BugStatus.Open, bug.Status);
         }
 
         [Theory]
         [InlineData(null)]
         [InlineData("")]
-        [InlineData("   ")]
+        [InlineData("   ")] // checks to see if title is null or empty, and the exception is thrown
         public void Constructor_InvalidTitle_ThrowsArgumentException(string invalidTitle)
         {
             // Arrange, Act & Assert
             // TODO: Uncomment this after implementing the guard clause
-            var ex = Assert.Throws<ArgumentException>(() => new Bug(1, invalidTitle, "desc"));
+            var ex = Assert.Throws<ArgumentException>(() => new Bug(1, invalidTitle, "desc", 0, 1));
             Assert.Equal("Title cannot be null, empty, or whitespace.", ex.Message);
         }
+        #endregion
+        #region ** UpdateStatus Tests **
+        [Fact] // checks to see if status is changed to open status
+        public void UpdateStatusTestOpen()
+        {
+            Bug bug = new Bug(1, "Open", "Tests Open status", 0, 1);
+            bug.UpdateStatus((BugStatus)1);
+            bug.UpdateStatus((BugStatus)0);
+            Assert.Equal(BugStatus.Open, bug.Status);
+        }
 
-        [Fact]
+        [Fact] // checks to see if status is changed to inprogress status
+        public void UpdateStatusTestInProgress()
+        {
+            Bug bug = new Bug(2, "InProgress", "Tests InProgress status", 1, 1);
+            bug.UpdateStatus((BugStatus)1);
+            Assert.Equal(BugStatus.InProgress, bug.Status);
+        }
+
+        [Fact] // checks to see if status is changed to pending status
+        public void UpdateStatusTestPending()
+        {
+            Bug bug = new Bug(3, "Pending", "Tests Resolved status", 0, 0);
+            bug.UpdateStatus((BugStatus)2);
+            Assert.Equal(BugStatus.Pending, bug.Status);
+        }
+
+        [Fact] // checks to see if status is changed to closed status
+        public void UpdateStatusTestClosed()
+        {
+            Bug bug = new Bug(4, "Closed", "Tests Closed status", 0, 0);
+            bug.UpdateStatus((BugStatus)3);
+            Assert.Equal(BugStatus.Closed, bug.Status);
+        }
+
+        [Fact] // checks to see if status is changed to new status
         public void UpdateStatus_ChangesStatus_ToNewStatus()
         {
             // Arrange
-            var bug = new Bug(6, "Icon missing", "Settings icon not visible");
+            var bug = new Bug(6, "Icon missing", "Settings icon not visible", 0, 1);
 
             // Act
             bug.UpdateStatus(BugStatus.InProgress);
@@ -71,11 +108,11 @@
             Assert.Equal((BugStatus)1, bug.Status);
         }
 
-        [Fact]
+        [Fact] // checks to see if status is changed from old status
         public void UpdateStatus_ChangesStatus_FromOldStatus()
         {
             // Arrange
-            var bug = new Bug(8, "Icon missing", "Settings icon not visible");
+            var bug = new Bug(8, "Icon missing", "Settings icon not visible", 0, 1);
             var initialStatus = bug.Status;
             // Act
             bug.UpdateStatus(BugStatus.InProgress);
@@ -88,7 +125,7 @@
         [InlineData(0)]
         [InlineData(1)]
         [InlineData(2)]
-        [InlineData(3)]
+        [InlineData(3)] // checks to see if same status exception is thrown
         public void UpdateStatus_ToSameStatus_ThrowsArgumentException(int status)
         {
             // Arrange
@@ -118,27 +155,149 @@
             // Assert
             Assert.Equal("Status is already set to the same value.", ex.Message);
         }
-
-        [Fact]
+        #endregion
+        #region ** UpdateAssignToDeveloper Tests **
+        [Fact] // checks to AssignedToDeveloper is null
         public void Constructor_AssignedToDeveloper_DefaultsToNull()
         {
             // Arrange & Act
-            var bug = new Bug(9, "Login fails", "Fails with correct credentials");
+            var bug = new Bug(9, "Login fails", "Fails with correct credentials", 0, 1);
             // Assert
             Assert.Null(bug.AssignedToDeveloper);
         }
 
-        [Fact]
+        [Fact] // checks to see if AssignedToDeveloper is assigns a developer correctly
         public void UpdateAssignedToDeveloper_ChangesAssignedToDeveloper()
         {
             // Arrange
-            var bug = new Bug(10, "Login fails", "Fails with correct credentials");
+            var bug = new Bug(10, "Login fails", "Fails with correct credentials", 0, 1);
             string developerName = "John Doe";
             // Act
             bug.UpdateAssignedToDeveloper(developerName);
             // Assert
             Assert.Equal(developerName, bug.AssignedToDeveloper);
         }
+        #endregion
+          
+        #region ** SetPriority Tests **
+        [Fact] // checks to see if priority sets correctly
+        public void SetPriority_ValidPriority_SetsPriority()
+        {
+            // Arrange
+            var bug = new Bug(11, "Test", "Test", 0 /*Act*/, 0);
+            // Assert
+            Assert.Equal(BugPriority.Low, bug.Priority);
+        }
+
+        [Fact] // Checks to see if Invalid entry exeption is thrown
+        public void SetPriority_InvalidPriority_ThrowsArgumentException()
+        {
+            // Arrange
+            var bug = new Bug(14, "Test", "Test", 0, 0);
+            // Act
+            var ex = Assert.Throws<ArgumentException>(() => bug.SetPriority(4));
+            // Assert
+            Assert.Equal("Priority is not a valid value.", ex.Message);
+        }
+
+        [Fact] // Checks if the priority is set to low
+        public void SetPriority_SetsPriorityToLow()
+        {
+            // Arrange
+            var bug = new Bug(15, "Test", "Test", 0 /*Act*/, 0);
+            // Assert
+            Assert.Equal(BugPriority.Low, bug.Priority);
+        }
+
+        [Fact] // Checks if the priority is set to medium
+        public void SetPriority_SetsPriorityToMedium()
+        {
+            // Arrange
+            var bug = new Bug(16, "Test", "Test", 1 /*Act*/, 0);
+            // Assert
+            Assert.Equal(BugPriority.Medium, bug.Priority);
+        }
+
+        [Fact] // Checks if the priority is set to high
+        public void SetPriority_SetsPriorityToHigh()
+        {
+            // Arrange
+            var bug = new Bug(17, "Test", "Test", 2 /*Act*/, 0);
+            // Assert
+            Assert.Equal(BugPriority.High, bug.Priority);
+        }
+        #endregion
+        #region ** SetSeverity Tests **
+        [Fact] // Checks to see if severity sets correctly
+        public void SetSeverity_ValidSeverity_SetsSeverity()
+        {
+            // Arrange
+            var bug = new Bug(18, "Test", "Test", 2, 2 /*Act*/);
+            // Assert
+            Assert.Equal(BugSeverity.Major, bug.Severity);
+        }
+
+        [Fact] // Checks to see if Invalid entry exception is thrown
+        public void SetSeverity_InvalidSeverity_ThrowsArgumentException()
+        {
+            // Arrange
+            var bug = new Bug(21, "Test", "Test", 0, 0);
+            // Act
+            var ex = Assert.Throws<ArgumentException>(() => bug.SetSeverity(4));
+            // Assert
+            Assert.Equal("Severity is not a valid value.", ex.Message);
+        }
+
+        [Fact] // Checks if the severity is set to trivial
+        public void SetSeverity_SetsSeverityToTrivial()
+        {
+            // Arrange
+            var bug = new Bug(22, "Test", "Test", 0, 0 /*Act*/);
+            // Assert
+            Assert.Equal(BugSeverity.Trivial, bug.Severity);
+        }
+
+        [Fact] // Checks if the severity is set to minor
+        public void SetSeverity_SetsSeverityToMinor()
+        {
+            // Arrange
+            var bug = new Bug(23, "Test", "Test", 1, 1 /*Act*/);
+            // Assert
+            Assert.Equal(BugSeverity.Minor, bug.Severity);
+        }
+
+        [Fact] // Checks if the severity is set to major
+        public void SetSeverity_SetsSeverityToMajor()
+        {
+            // Arrange
+            var bug = new Bug(24, "Test", "Test", 2, 2 /*Act*/);
+            // Assert
+            Assert.Equal(BugSeverity.Major, bug.Severity);
+        }
+
+        [Fact] // Checks if the severity is set to critical
+        public void SetSeverity_SetsSeverityToCritical()
+        {
+            // Arrange
+            var bug = new Bug(25, "Test", "Test", 2, 3 /*Act*/);
+            // Assert
+            Assert.Equal(BugSeverity.Critical, bug.Severity);
+        }
+        #endregion
+
+        #region ** CreateBug Tests **
+        [Fact] // checks to see if bug is created correctly
+        public void CreateBug_ValidInput_CreatesBug()
+        {
+            // Arrange
+            var bugService = new BugService();
+            // Act
+            var bug = bugService.CreateBug("Icon Error", "Missing Icon", 0, 0);
+            // Assert
+            Assert.IsType<Bug>(bug);
+        }
+        #endregion
+          
         [Fact]
         public void StatusChange_OpenToInProgress_ShouldChange()
         {

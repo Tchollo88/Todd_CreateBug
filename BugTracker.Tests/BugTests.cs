@@ -11,6 +11,32 @@
             Assert.IsType<Bug>(bug);
         }
 
+        [Fact] // checks to see if status is changed to closed status
+        public void UpdateStatusTestClosed()
+        {
+            Bug bug = new Bug(4, "Closed", "Tests Closed status", 0, 0);
+            bug.UpdateStatus((BugStatus)1);
+            bug.UpdateStatus((BugStatus)3);
+            Assert.Equal(BugStatus.Closed, bug.Status);
+        }
+
+        [Fact] // checks to see if status is changed to inprogress status
+        public void UpdateStatusTestInProgress()
+        {
+            Bug bug = new Bug(2, "InProgress", "Tests InProgress status", 1, 1);
+            bug.UpdateStatus((BugStatus)1);
+            Assert.Equal(BugStatus.InProgress, bug.Status);
+        }
+
+        [Fact] // checks to see if status is changed to pending status
+        public void UpdateStatusTestPending()
+        {
+            Bug bug = new Bug(3, "Pending", "Tests Resolved status", 0, 0);
+            bug.UpdateStatus((BugStatus)1);
+            bug.UpdateStatus((BugStatus)2);
+            Assert.Equal(BugStatus.Pending, bug.Status);
+        }
+
         [Fact] // checks to see if the constructor initializes correctly
         public void Constructor_ValidInput_InitializesCorrectly()
         {
@@ -39,39 +65,70 @@
         }
         #endregion
         #region ** UpdateStatus Tests **
-        [Fact] // checks to see if status is changed to open status
-        public void UpdateStatusTestOpen()
-        {
-            Bug bug = new Bug(1, "Open", "Tests Open status", 0, 1);
-            bug.UpdateStatus((BugStatus)1);
-            bug.UpdateStatus((BugStatus)0);
-            Assert.Equal(BugStatus.Open, bug.Status);
-        }
 
-        [Fact] // checks to see if status is changed to inprogress status
-        public void UpdateStatusTestInProgress()
+        [Fact]
+        public void StatusChange_OpenToInProgress_ShouldChange()
         {
-            Bug bug = new Bug(2, "InProgress", "Tests InProgress status", 1, 1);
-            bug.UpdateStatus((BugStatus)1);
+            // Arrange
+            var bug = new Bug(10, "OpenToInProgress", "Should succeed", 0, 1);
+
+            // Act
+            bug.UpdateStatus(BugStatus.InProgress);
+
+            // Assert
             Assert.Equal(BugStatus.InProgress, bug.Status);
         }
 
-        [Fact] // checks to see if status is changed to pending status
-        public void UpdateStatusTestPending()
+        [Theory]
+        [InlineData(BugStatus.Pending)]
+        [InlineData(BugStatus.Closed)]
+        public void StatusChange_InProgressToPendingOrClosed_ShouldChange(BugStatus bugStatus)
         {
-            Bug bug = new Bug(3, "Pending", "Tests Resolved status", 0, 0);
-            bug.UpdateStatus((BugStatus)2);
-            Assert.Equal(BugStatus.Pending, bug.Status);
+            // Arrange
+            var bug = new Bug(11, "InProgressToPendingOrClosed", "Should succeed", 0, 1);
+
+            // Act
+            bug.UpdateStatus(BugStatus.InProgress);
+            bug.UpdateStatus(bugStatus);
+
+            // Assert
+            Assert.Equal(bugStatus, bug.Status);
         }
 
-        [Fact] // checks to see if status is changed to closed status
-        public void UpdateStatusTestClosed()
+        [Theory]
+        [InlineData(BugStatus.InProgress)]
+        [InlineData(BugStatus.Closed)]
+        public void StatusChange_PendingToInProgressOrClosed_ShouldChange(BugStatus bugStatus)
         {
-            Bug bug = new Bug(4, "Closed", "Tests Closed status", 0, 0);
-            bug.UpdateStatus((BugStatus)3);
+            // Arrange
+            var bug = new Bug(12, "PendingToInProgressOrClosed", "Should succeed", 0, 1);
+
+            // Act
+            bug.UpdateStatus(BugStatus.InProgress);
+            bug.UpdateStatus(BugStatus.Pending);
+            bug.UpdateStatus(bugStatus);
+
+            // Assert
+            Assert.Equal(bugStatus, bug.Status);
+        }
+
+        [Theory]
+        [InlineData(BugStatus.Open)]
+        [InlineData(BugStatus.Pending)]
+        public void StatusChange_ClosedToOpenOrPending_ShouldNotChange(BugStatus bugStatus)
+        {
+            // Arrange
+            var bug = new Bug(13, "ClosedToOpenOrPending", "Should not succeed", 0, 1);
+
+            // Act
+            bug.UpdateStatus(BugStatus.InProgress);
+            bug.UpdateStatus(BugStatus.Pending);
+            bug.UpdateStatus(BugStatus.Closed);
+            bug.UpdateStatus(bugStatus);
+
+            // Assert
             Assert.Equal(BugStatus.Closed, bug.Status);
         }
-
         [Fact] // checks to see if status is changed to new status
         public void UpdateStatus_ChangesStatus_ToNewStatus()
         {
@@ -79,10 +136,10 @@
             var bug = new Bug(6, "Icon missing", "Settings icon not visible", 0, 1);
 
             // Act
-            bug.UpdateStatus(BugStatus.Pending);
+            bug.UpdateStatus(BugStatus.InProgress);
 
             // Assert
-            Assert.Equal((BugStatus)2, bug.Status);
+            Assert.Equal((BugStatus)1, bug.Status);
         }
 
         [Fact] // checks to see if status is changed from old status
@@ -92,7 +149,7 @@
             var bug = new Bug(8, "Icon missing", "Settings icon not visible", 0, 1);
             var initialStatus = bug.Status;
             // Act
-            bug.UpdateStatus(BugStatus.Pending);
+            bug.UpdateStatus(BugStatus.InProgress);
 
             // Assert
             Assert.NotEqual(initialStatus, bug.Status);
@@ -105,26 +162,32 @@
         [InlineData(3)] // checks to see if same status exception is thrown
         public void UpdateStatus_ToSameStatus_ThrowsArgumentException(int status)
         {
-            if (status == 0)
+            // Arrange
+            var bug = new Bug(7, "StatusTest", "Status must change to a new status when updated", 0, 1);
+            switch (status)
             {
-                // Arrange
-                var bug = new Bug(7, "StatusTest", "Status must change to a new status when updated", 0, 1);
-                // Act
-                var ex = Assert.Throws<ArgumentException>(() => bug.UpdateStatus((BugStatus)status));
-                // Assert
-                Assert.True(ex.Message == "Status is already set to the same value.");
+                case 0:
+                    break;
+                case 1:
+                    // Assignes the bug status to the same value as the one being tested
+                    bug.UpdateStatus((BugStatus)status);
+                    break;
+                case 2:
+                    // Assignes the bug status to the same value as the one being tested
+                    bug.UpdateStatus((BugStatus)1);
+                    bug.UpdateStatus((BugStatus)status);
+                    break;
+                case 3:
+                    // Assignes the bug status to the same value as the one being tested
+                    bug.UpdateStatus((BugStatus)1);
+                    bug.UpdateStatus((BugStatus)2);
+                    bug.UpdateStatus((BugStatus)status);
+                    break;
             }
-            else
-            {
-                // Arrange
-                var bug = new Bug(7, "StatusTest", "Status must change to a new status when updated", 0, 1);
-                // Assignes the bug status to the same value as the one being tested
-                bug.UpdateStatus((BugStatus)status);
-                // Act
-                var ex = Assert.Throws<ArgumentException>(() => bug.UpdateStatus((BugStatus)status));
-                // Assert
-                Assert.Equal("Status is already set to the same value.", ex.Message);
-            }
+            // Act
+            var ex = Assert.Throws<ArgumentException>(() => bug.UpdateStatus((BugStatus)status));
+            // Assert
+            Assert.Equal("Status is already set to the same value.", ex.Message);
         }
         #endregion
         #region ** UpdateAssignToDeveloper Tests **
@@ -254,7 +317,6 @@
             Assert.Equal(BugSeverity.Critical, bug.Severity);
         }
         #endregion
-
         #region ** CreateBug Tests **
         [Fact] // checks to see if bug is created correctly
         public void CreateBug_ValidInput_CreatesBug()

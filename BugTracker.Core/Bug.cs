@@ -8,7 +8,7 @@
         public BugStatus Status { get; set; }
         public string AssignedToDeveloper { get; set; }
 
-        public Bug(int bugId, string title, string description)
+        public Bug(int bugId, string title, string description, int priority, int severity)
         {
             // TODO: Add guard clause for title
             if (string.IsNullOrWhiteSpace(title))
@@ -19,6 +19,10 @@
             Description = description;
             Status = BugStatus.Open;
             AssignedToDeveloper = null;
+        }
+
+        public Bug(int v1, string v2, string v3)
+        {
         }
 
         public void UpdateStatus(BugStatus newStatus)

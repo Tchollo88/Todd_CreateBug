@@ -330,4 +330,36 @@
         }
         #endregion
     }
+    public class BugServiceTests
+    {
+        [Fact]
+        public void DeleteBug_ShouldRemoveBug_WhenBugExists()
+        {
+            // Arrange
+            var service = new BugService();
+            var bug = service.CreateBug("Test Bug", "Sample description", 1, 2);
+            int bugId = bug.BugId;
+
+            // Act
+            bool result = service.DeleteBug(bugId);
+
+            // Assert
+            Assert.True(result);
+            Assert.DoesNotContain(service.getBugs, b => b.BugId == bugId);
+        }
+
+        [Fact]
+        public void DeleteBug_ShouldReturnFalse_WhenBugDoesNotExist()
+        {
+            // Arrange
+            var service = new BugService();
+            int nonExistentBugId = 999;
+
+            // Act
+            bool result = service.DeleteBug(nonExistentBugId);
+
+            // Assert
+            Assert.False(result);
+        }
+    }
 }

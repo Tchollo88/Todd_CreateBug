@@ -29,7 +29,7 @@
             Status = BugStatus.Open;
             AssignedToDeveloper = null;
         }
-
+      
     #region ** Changing Data Methods **
         // Update the bug's status or checks if Status already exisits *
         public void UpdateStatus(BugStatus newStatus)

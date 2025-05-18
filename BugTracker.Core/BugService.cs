@@ -1,4 +1,9 @@
-﻿
+
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace BugTracker.Core
 {
@@ -10,6 +15,7 @@ namespace BugTracker.Core
         {
             get { return _bugs; }
         }
+      
         public BugService() // Constructor that initializes the bug list with some sample bugs
         {
             _bugs.Add(new Bug(1, "Zebra", "Test bug 1", 1, 1)); // Status is Open
@@ -28,7 +34,18 @@ namespace BugTracker.Core
             _bugs.Add(bug);
             return bug;
         }
-
+        
+        public bool DeleteBug(int bugId)
+        {
+            var bug = _bugs.FirstOrDefault(b => b.BugId == bugId);
+            if (bug != null)
+            {
+                _bugs.Remove(bug);
+                return true;
+            }
+            return false;
+        }
+      
         public List<Bug> SortBugsByTitle()
         {
             List<Bug> UnsortedBugs = _bugs;
@@ -47,6 +64,5 @@ namespace BugTracker.Core
 
         // ToDo: Add to developer service should assign to developer and then check if status is open or not, if open set to in progress
 
-        // ToDo: Delete bug from list
     }
 }

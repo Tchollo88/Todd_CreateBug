@@ -19,7 +19,22 @@ namespace BugTracker.Core
             _bugs.Add(bug);
             return bug;
         }
-        // ToDo: View list of bugs should manipulate the list of bugs and display them in a user friendly way
+
+        public List<Bug> SortBugsByTitle()
+        {
+            List<Bug> UnsortedBugs = _bugs;
+            UnsortedBugs.Sort((x, y) => string.Compare(x.Title.ToLower(), y.Title.ToLower(), StringComparison.Ordinal));
+            List<Bug> SortedByTitle = UnsortedBugs;
+            return SortedByTitle;
+        }
+
+        public List<Bug> SortBugsByStatus()
+        {
+            List<Bug> UnsortedBugs = _bugs;
+            UnsortedBugs.Sort((x, y) => x.Status.CompareTo(y.Status));
+            List<Bug> SortedById = UnsortedBugs;
+            return SortedById;
+        }
 
         // ToDo: Add to developer service should assign to developer and then check if status is open or not, if open set to in progress
 

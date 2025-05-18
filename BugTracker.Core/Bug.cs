@@ -8,7 +8,7 @@
         public BugPriority Priority { get; private set; }
         public BugSeverity Severity { get; private set; }
         public BugStatus Status { get; private set; }
-        public string? AssignedToDeveloper { get; private set; }
+        public string? AssignedToDeveloper { get; set; }
 
         // Constructor for Bug class, initializes properties and sets default values *
         public Bug(int bugId, string title, string description, int priority, int severity)
@@ -108,7 +108,7 @@
             }
 
             bug.AssignedToDeveloper = developerName;
-            return ($"Bug: {bug.BugId} has beeen successfully assigned to developer: {bug.AssignedToDeveloper}");
+            return ($"Bug: {bug.BugId} has been successfully assigned to developer: {bug.AssignedToDeveloper}");
         }
         #endregion
 

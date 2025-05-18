@@ -329,5 +329,51 @@
             Assert.IsType<Bug>(bug);
         }
         #endregion
+        #region ** Method AssignToDeveloper Tests **
+
+        [Fact]
+        public void AssignToDeveloper_WhenBuggAlreadyAssigned_ReturnsAlreadyAssignedMessage()
+        {
+            // Arrange
+            var bug = new Bug(5, "title", "description", (int)BugPriority.High, (int)BugSeverity.Critical);
+            bug.AssignedToDeveloper = "Paul";
+
+            // Act
+            var result = bug.AssignToDeveloper(bug, "Jean");
+
+            // Assert
+            Assert.Equal("This bug is already assigned to a developer.", result);
+
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        public void AssignToDeveloper_WhenDeveloperNameIsNullOrEmpty_ReturnsInvalidInputMessage(string developerName)
+        {
+            var bug = new Bug(5, "title", "description", (int)BugPriority.High, (int)BugSeverity.Critical);
+
+            var result = bug.AssignToDeveloper(bug, developerName);
+
+            Assert.Equal("invalid input", result, StringComparer.OrdinalIgnoreCase);
+        }
+
+        [Fact]
+        public void AssignToDeveloper_WithValidDeveloperName_UpdatesAssignToDeveloperProperty()
+        {
+            var bug = new Bug(5, "title", "description", (int)BugPriority.High, (int)BugSeverity.Critical);
+            var result = bug.AssignToDeveloper(bug, "Paul");
+            Assert.Equal("paul", bug.AssignedToDeveloper, StringComparer.OrdinalIgnoreCase);
+        }
+
+        [Fact]
+        public void AssignToDeveloper_WithhValidDevelperName_ReturnsSuccessfulAssignmentMessage() 
+        {
+            var bug = new Bug(5, "title", "description", (int)BugPriority.High, (int)BugSeverity.Critical);
+            var result = bug.AssignToDeveloper(bug, "Paul");
+            Assert.Equal("Bug: 5 has been successfully assigned to developer: paul", result, StringComparer.OrdinalIgnoreCase);
+        }
+        #endregion
     }
 }

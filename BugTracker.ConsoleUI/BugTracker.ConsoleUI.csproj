@@ -11,4 +11,8 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BugTracker.Core\BugTracker.Core.csproj" />
+  </ItemGroup>
+
 </Project>

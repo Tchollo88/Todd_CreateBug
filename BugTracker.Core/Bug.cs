@@ -8,7 +8,7 @@
         public BugPriority Priority { get; private set; }
         public BugSeverity Severity { get; private set; }
         public BugStatus Status { get; private set; }
-        public string AssignedToDeveloper { get; private set; }
+        public string? AssignedToDeveloper { get; set; }
 
         // Constructor for Bug class, initializes properties and sets default values *
         public Bug(int bugId, string title, string description, int priority, int severity)
@@ -93,7 +93,24 @@
         {
             AssignedToDeveloper = developer;
         }
-    #endregion
+
+        // Assign a bug to a developer
+        public string AssignToDeveloper(Bug bug, string developerName)
+        {
+            if (string.IsNullOrWhiteSpace(developerName))
+            {
+                return ("Invalid input");
+            }
+
+            if (!string.IsNullOrWhiteSpace(bug.AssignedToDeveloper))
+            {
+                return ("This bug is already assigned to a developer.");
+            }
+
+            bug.AssignedToDeveloper = developerName;
+            return ($"Bug: {bug.BugId} has been successfully assigned to developer: {bug.AssignedToDeveloper}");
+        }
+        #endregion
 
     }
 

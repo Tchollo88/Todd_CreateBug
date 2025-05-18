@@ -15,7 +15,7 @@
 
             // Assert  
             Assert.NotNull(bug);
-            Assert.Equal(1, bug.BugId); // Should be the first bug, so ID = 1  
+            Assert.Equal(4, bug.BugId); // Should the 4th bug because 3 bugs are created as seeds by default
             Assert.Equal("Test Title", bug.Title);
             Assert.Equal("Test Description", bug.Description);
             Assert.Equal(BugPriority.High, bug.Priority);
@@ -23,8 +23,7 @@
 
             // Verify it was added to the internal list  
             var allBugs = bugManager.getBugs;
-            Assert.Single(allBugs);
-            Assert.Same(bug, allBugs[0]);
+            Assert.Same(bug, allBugs[3]);
         }
 
         [Fact]
@@ -38,8 +37,8 @@
             var bug2 = bugManager.CreateBug("Bug 2", "Desc 2", (int)BugPriority.High, 2);
 
             // Assert  
-            Assert.Equal(1, bug1.BugId);
-            Assert.Equal(2, bug2.BugId);
+            Assert.Equal(4, bug1.BugId);
+            Assert.Equal(5, bug2.BugId);
         }
     }
 }

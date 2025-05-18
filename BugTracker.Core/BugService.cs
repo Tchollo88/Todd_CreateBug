@@ -10,6 +10,15 @@ namespace BugTracker.Core
         {
             get { return _bugs; }
         }
+        public BugService() // Constructor that initializes the bug list with some sample bugs
+        {
+            _bugs.Add(new Bug(1, "Zebra", "Test bug 1", 1, 1)); // Status is Open
+            _bugs.Add(new Bug(2, "Apple", "Test bug 2", 2, 2)); // Status is Pending
+            _bugs.Add(new Bug(3, "Monkey", "Test bug 3", 2, 2)); // Status is InProgress
+            _bugs[2].UpdateStatus(BugStatus.InProgress);
+            _bugs[1].UpdateStatus(BugStatus.InProgress);
+            _bugs[1].UpdateStatus(BugStatus.Pending);
+        }
 
 
         // Method to add a bug to the list of bugs *

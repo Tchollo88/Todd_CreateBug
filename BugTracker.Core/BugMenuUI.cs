@@ -17,6 +17,10 @@ namespace BugTracker.Core
         {                                           // if no TextWriter is provided, it will use the default console output
             _output = output ?? Console.Out;
         }
+        public BugMenuUI(BugService bugService)
+        {
+            _bugService = bugService;
+        }
 
         // These are injectable callbacks, so we can mock them in tests
         public Action OnCreateBug = () => { /*Console.WriteLine("You chose to Create a Bug.");*/ };
@@ -176,10 +180,8 @@ namespace BugTracker.Core
                 Separator();
                 _output.WriteLine("Press (T) to sort by Title, (S) to sort by Status, or (M) to return to Menu"); // Footer
                 ConsoleKey input = Console.ReadKey().Key;
-                bugList = SortedContent(bugList, input);
+                bugList = SortedContent(input);
             } while (true); // This is used to keep the list open until the user chooses to exit
-            
-
         }
         private void Separator()
         {
@@ -201,7 +203,7 @@ namespace BugTracker.Core
                     $"{bug.Priority}\n");
             }
         }
-        private List<Bug> SortedContent(List<Bug> list, ConsoleKey input)
+        public List<Bug> SortedContent(ConsoleKey input, List<Bug> list = null, bool skipClear = false)
         {
             switch (input)
             {
@@ -213,6 +215,11 @@ namespace BugTracker.Core
                     break;
                 case ConsoleKey.M:
                     DisplayMenu(() => Console.ReadKey().KeyChar);
+                    break;
+                default:
+                    _output.WriteLine("Invalid option. Please try again.");
+                    if (!skipClear)
+                    { DisplayMenu(() => Console.ReadKey().KeyChar); }
                     break;
             }
             return list;

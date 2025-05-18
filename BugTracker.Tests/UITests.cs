@@ -14,7 +14,7 @@ namespace BugTracker.Tests
         {
             public override Encoding Encoding => Encoding.UTF8; // <-- This is the encoding used for the output
             public StringWriter StringWriter = new StringWriter(); // <-- This is the StringWriter used to capture the output
-            public override void WriteLine(string? value) => StringWriter.WriteLine(value); 
+            public override void WriteLine(string? value) => StringWriter.WriteLine(value);
             public override void Write(string? value) => StringWriter.Write(value);
         }
 
@@ -81,6 +81,41 @@ namespace BugTracker.Tests
             Assert.Contains("1", printedOutput);
         }
 
+        #endregion
+
+        #region ** View Bugs Tests **
+        [Fact]
+        public void ViewBugs_SortedByTitle_OrderShouldChange()
+        {
+            // Arrange
+            var bugs = new List<Bug>();
+            var output = new TestOutput();
+            var userView = new BugMenuUI(output); // Pass the output to the class
+
+            // Act
+            bugs = userView.SortedContent(ConsoleKey.T, null, true);
+
+            // Assert
+            Assert.Equal(bugs[0].BugId, 2);
+            Assert.Equal(bugs[1].BugId, 3);
+            Assert.Equal(bugs[2].BugId, 1);
+        }
+        [Fact]
+        public void ViewBugs_SortedByStatus_OrderShouldChange()
+        {
+            // Arrange
+            var bugs = new List<Bug>();
+            var output = new TestOutput();
+            var userView = new BugMenuUI(output); // Pass the output to the class
+
+            // Act
+            bugs = userView.SortedContent(ConsoleKey.S, null, true);
+
+            // Assert
+            Assert.Equal(bugs[0].BugId, 1);
+            Assert.Equal(bugs[1].BugId, 3);
+            Assert.Equal(bugs[2].BugId, 2);
+        }
         #endregion
     }
 }

@@ -10,6 +10,15 @@ namespace BugTracker.Core
         {
             get { return _bugs; }
         }
+        public BugService() // Constructor that initializes the bug list with some sample bugs
+        {
+            _bugs.Add(new Bug(1, "Zebra", "Test bug 1", 1, 1)); // Status is Open
+            _bugs.Add(new Bug(2, "Apple", "Test bug 2", 2, 2)); // Status is Pending
+            _bugs.Add(new Bug(3, "Monkey", "Test bug 3", 2, 2)); // Status is InProgress
+            _bugs[2].UpdateStatus(BugStatus.InProgress);
+            _bugs[1].UpdateStatus(BugStatus.InProgress);
+            _bugs[1].UpdateStatus(BugStatus.Pending);
+        }
 
 
         // Method to add a bug to the list of bugs *
@@ -19,7 +28,22 @@ namespace BugTracker.Core
             _bugs.Add(bug);
             return bug;
         }
-        // ToDo: View list of bugs should manipulate the list of bugs and display them in a user friendly way
+
+        public List<Bug> SortBugsByTitle()
+        {
+            List<Bug> UnsortedBugs = _bugs;
+            UnsortedBugs.Sort((x, y) => string.Compare(x.Title.ToLower(), y.Title.ToLower(), StringComparison.Ordinal));
+            List<Bug> SortedByTitle = UnsortedBugs;
+            return SortedByTitle;
+        }
+
+        public List<Bug> SortBugsByStatus()
+        {
+            List<Bug> UnsortedBugs = _bugs;
+            UnsortedBugs.Sort((x, y) => x.Status.CompareTo(y.Status));
+            List<Bug> SortedById = UnsortedBugs;
+            return SortedById;
+        }
 
         // ToDo: Add to developer service should assign to developer and then check if status is open or not, if open set to in progress
 

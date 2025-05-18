@@ -11,10 +11,15 @@ namespace BugTracker.Core
     {
         #region ** UI Display **
         private readonly TextWriter _output; // <-- This is a private field that is used to write to the console
+        private BugService _bugService = new BugService(); // Create an instance of BugService
 
         public BugMenuUI(TextWriter output = null) // <-- This is a constructor that takes a TextWriter as an argument
         {                                           // if no TextWriter is provided, it will use the default console output
             _output = output ?? Console.Out;
+        }
+        public BugMenuUI(BugService bugService)
+        {
+            _bugService = bugService;
         }
 
         // These are injectable callbacks, so we can mock them in tests
@@ -50,7 +55,7 @@ namespace BugTracker.Core
                     break;
                 case 'V':
                     if (!skipClear)
-                    { /*View List method goes here*/ }
+                    { ViewBugList(); }
                     else { OnViewBugList(); }
                     break;
                 case 'A':
@@ -109,11 +114,9 @@ namespace BugTracker.Core
         #endregion
 
         #endregion
-
         #region ** Create Bug **
         public void CreateBug()
         {
-            BugService bugService = new BugService(); // Create an instance of BugService
             Bug bug;
             bool skipClear = false; // This is used to skip the clear screen for testing purposes
 
@@ -133,7 +136,7 @@ namespace BugTracker.Core
             string priorityInput = Console.ReadLine();
             
             if (!int.TryParse(priorityInput, out int parsedPriority) || parsedPriority < 0 || parsedPriority > 2)
-            {// checks if the input is a number and if it is between 1 and 3
+            {// checks if the input is a number and if it is between 0 and 2
                 // if not, it will return an error message
                 _output.WriteLine("Invalid input. Please enter a number between 0 and 2.");
                 _output.WriteLine("Press any key to coninue.");
@@ -149,7 +152,7 @@ namespace BugTracker.Core
             string severityInput = Console.ReadLine();
             
             if (!int.TryParse(severityInput, out int parsedSeverity) || parsedSeverity < 0 || parsedSeverity > 3)
-            {// checks if the input is a number and if it is between 1 and 4
+            {// checks if the input is a number and if it is between 0 and 3
                 // if not, it will return an error message
                 _output.WriteLine("Invalid input. Please enter a number between 0 and 3.");
                 _output.WriteLine("Press any key to coninue.");
@@ -158,12 +161,70 @@ namespace BugTracker.Core
             }
             int severity = parsedSeverity;
 
-            bug = bugService.CreateBug(title, description, priority, severity); // Call the CreateBug method from BugService
+            bug = _bugService.CreateBug(title, description, priority, severity); // Call the CreateBug method from BugService
             DisplayBugDetails(bug); // Display the bug details
         }
         #endregion
-
-
+        #region ** View Bug List **
+        public void ViewBugList()
+        {
+            bool skipClear = false; // This is used to skip the clear screen for testing purposes
+            List<Bug> bugList = _bugService.getBugs; // Get the list of bugs from the BugService
+            do 
+            {
+                if (!skipClear)
+                { Console.Clear(); }
+                _output.WriteLine("Bug Id\tBug Title\tBug Status\tDescription\t\t\tAssigned To\t\tSeverity\tPriority"); // Headers
+                Separator();
+                Content(bugList);
+                Separator();
+                _output.WriteLine("Press (T) to sort by Title, (S) to sort by Status, or (M) to return to Menu"); // Footer
+                ConsoleKey input = Console.ReadKey().Key;
+                bugList = SortedContent(input);
+            } while (true); // This is used to keep the list open until the user chooses to exit
+        }
+        private void Separator()
+        {
+            int lengthOfSeparator = 120; // This is used to set the length of the separator
+            for (int i = 0; i < lengthOfSeparator; i++)
+            { _output.Write("="); }
+            _output.WriteLine("\n");
+        }
+        private void Content(List<Bug> List)
+        {
+            foreach (var bug in List)
+            {
+                _output.WriteLine($"{bug.BugId}\t" +
+                    $"{Truncate(bug.Title + "            ", 14)}\t" +
+                    $"{Truncate(bug.Status + "        ", 14)}\t" +
+                    $"{Truncate(bug.Description + "                             ", 30)}\t" +
+                    $"{Truncate(bug.AssignedToDeveloper + "              ", 14)}\t\t" +
+                    $"{Truncate(bug.Severity + "      ", 14)}\t" +
+                    $"{bug.Priority}\n");
+            }
+        }
+        public List<Bug> SortedContent(ConsoleKey input, List<Bug> list = null, bool skipClear = false)
+        {
+            switch (input)
+            {
+                case ConsoleKey.T:
+                    list = _bugService.SortBugsByTitle();
+                    break;
+                case ConsoleKey.S:
+                    list = _bugService.SortBugsByStatus();
+                    break;
+                case ConsoleKey.M:
+                    DisplayMenu(() => Console.ReadKey().KeyChar);
+                    break;
+                default:
+                    _output.WriteLine("Invalid option. Please try again.");
+                    if (!skipClear)
+                    { DisplayMenu(() => Console.ReadKey().KeyChar); }
+                    break;
+            }
+            return list;
+        }
+        #endregion
     }
 }
 

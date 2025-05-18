@@ -32,48 +32,57 @@ namespace BugTracker.Core
         #region ** Menu **
         public void DisplayMenu(Func<char> inputProvider, bool skipClear = false) // <-- Func<char> is a delegate type that
         {                                                                             // takes a function that returns a char
-            if (!skipClear)
-            { Console.Clear(); } // <-- This allows us to skip the clear screen for testing purposes
-            _output.WriteLine("==========================================");
-            _output.WriteLine("|             BUG TRACKER MENU           |");
-            _output.WriteLine("==========================================");
-            _output.WriteLine("| (C) Create Bug                         |");
-            _output.WriteLine("| (V) View Bug List                      |");
-            _output.WriteLine("| (A) Assign to Developer                |");
-            _output.WriteLine("| (D) Delete Bug                         |");
-            _output.WriteLine("==========================================");
-
-            _output.WriteLine("Please select an option: ");
-            char userChoice = char.ToUpper(inputProvider());
-            _output.WriteLine("\n");
-            switch (userChoice)
+            do
             {
-                case 'C':
-                    if (!skipClear) // <-- This is used to skip the clear screen for testing purposes
-                    { CreateBug(); }
-                    else { OnCreateBug(); }
-                    break;
-                case 'V':
-                    if (!skipClear)
-                    { ViewBugList(); }
-                    else { OnViewBugList(); }
-                    break;
-                case 'A':
-                    if (!skipClear)
-                    { /*Assign Developer method goes here*/ }
-                    else { OnAssignBug(); }
-                    break;
-                case 'D':
-                    if (!skipClear)
-                    { /*Delete method goes here*/ }
-                    else { OnDeleteBug(); }
-                    break;
-                default:
-                    _output.WriteLine("Invalid option. Please try again.");
-                    if(!skipClear)
-                    { DisplayMenu(() => Console.ReadKey().KeyChar); }
-                    break;
-            }
+                if (!skipClear)
+                { Console.Clear(); } // <-- This allows us to skip the clear screen for testing purposes
+                _output.WriteLine("==========================================");
+                _output.WriteLine("|             BUG TRACKER MENU           |");
+                _output.WriteLine("==========================================");
+                _output.WriteLine("| (C) Create Bug                         |");
+                _output.WriteLine("| (V) View Bug List                      |");
+                _output.WriteLine("| (A) Assign to Developer                |");
+                _output.WriteLine("| (D) Delete Bug                         |");
+                _output.WriteLine("|                                        |");
+                _output.WriteLine("| (E) Exit                               |");
+                _output.WriteLine("==========================================");
+
+                _output.WriteLine("Please select an option: ");
+                char userChoice = char.ToUpper(inputProvider());
+                _output.WriteLine("\n");
+                switch (userChoice)
+                {
+                    case 'C':
+                        if (!skipClear) // <-- This is used to skip the clear screen for testing purposes
+                        { CreateBug(); }
+                        else { OnCreateBug(); }
+                        break;
+                    case 'V':
+                        if (!skipClear)
+                        { ViewBugList(); }
+                        else { OnViewBugList(); }
+                        break;
+                    case 'A':
+                        if (!skipClear)
+                        { /*Assign Developer method goes here*/ }
+                        else { OnAssignBug(); }
+                        break;
+                    case 'D':
+                        if (!skipClear)
+                        { /*Delete method goes here*/ }
+                        else { OnDeleteBug(); }
+                        break;
+                    case 'E':
+                        if (!skipClear)
+                        { Environment.Exit(0); }
+                        break;
+                    default:
+                        _output.WriteLine("Invalid option. Please try again.");
+                        if (!skipClear)
+                        { DisplayMenu(() => Console.ReadKey().KeyChar); }
+                        break;
+                }
+            } while (!skipClear);
         }
         #endregion
         #region ** Bug Display **
@@ -180,7 +189,7 @@ namespace BugTracker.Core
                 Separator();
                 _output.WriteLine("Press (T) to sort by Title, (S) to sort by Status, or (M) to return to Menu"); // Footer
                 ConsoleKey input = Console.ReadKey().Key;
-                bugList = SortedContent(input);
+                bugList = SortedContent(input, bugList);
             } while (true); // This is used to keep the list open until the user chooses to exit
         }
         private void Separator()
@@ -219,7 +228,7 @@ namespace BugTracker.Core
                 default:
                     _output.WriteLine("Invalid option. Please try again.");
                     if (!skipClear)
-                    { DisplayMenu(() => Console.ReadKey().KeyChar); }
+                    { ViewBugList(); }
                     break;
             }
             return list;

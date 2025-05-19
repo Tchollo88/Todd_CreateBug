@@ -21,7 +21,7 @@ Acceptance Criteria
 
 (5) Points – The feature requires input to instantiate the creation of a bug, opens fields to input valid data for each property, and an enum/list to store all the necessary status types, ensuring that status is tied to the enum/list. 
 
-I managed to build a process that initializes the creation of a bug by  requiring the user to press the letter c while interacting with the project's main menu. Once pressed,d I run a method that asks a queue of questions to fulfill all the required data {Title, Description, Priority, Severity}. Once the questions are answered, it takes the data, passes into creating the bug with said data, and adds it to the saved list. To verify the bug was created, a ticket will be displayed that shows what the bug model looks like. This way, A User will be able to create a bug that holds all the information a developer will need to know it needs to be addressed, how severe, and what its priority will be.
+I managed to build a process that initializes the creation of a bug by  requiring the user to press the letter c while interacting with the project's main menu. Once pressed, I run a method that asks a queue of questions to fulfill all the required data {Title, Description, Priority, Severity}. Once the questions are answered, it takes the data, passes into creating the bug with said data, and adds it to the saved list. To verify the bug was created, a ticket will be displayed that shows what the bug model looks like. This way, A User will be able to create a bug that holds all the information a developer will need to know it needs to be addressed, how severe, and what its priority will be.
 
 ### ✅ B2: View Bug List
 - Explain your solution and testing approach

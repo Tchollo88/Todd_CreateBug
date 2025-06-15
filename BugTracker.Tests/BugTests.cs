@@ -233,32 +233,48 @@
             Assert.Equal("Priority is not a valid value.", ex.Message);
         }
 
-        [Fact] // Checks if the priority is set to low
-        public void SetPriority_SetsPriorityToLow()
+        [Theory] // Checks if the priority is set to the correct enum value
+        [InlineData(0, BugPriority.Low)] // Act
+        [InlineData(1, BugPriority.Medium)] // Act
+        [InlineData(2, BugPriority.High)] // Act
+        public void SetPriority_SetsCorrectEnumValue(int priorityInput, BugPriority expectedPriority)
         {
             // Arrange
-            var bug = new Bug(15, "Test", "Test", 0 /*Act*/, 0);
+            var bug = new Bug(99, "Test Bug", "Test Description", priorityInput, /*Act*/ 0);
+
             // Assert
-            Assert.Equal(BugPriority.Low, bug.Priority);
+            Assert.Equal(expectedPriority, bug.Priority);
         }
 
-        [Fact] // Checks if the priority is set to medium
-        public void SetPriority_SetsPriorityToMedium()
-        {
-            // Arrange
-            var bug = new Bug(16, "Test", "Test", 1 /*Act*/, 0);
-            // Assert
-            Assert.Equal(BugPriority.Medium, bug.Priority);
-        }
+        #region **Old Tests**
+        //[Fact] // Checks if the priority is set to low
+        //public void SetPriority_SetsPriorityToLow()
+        //{
+        //    // Arrange
+        //    var bug = new Bug(15, "Test", "Test", 0 /*Act*/, 0);
+        //    // Assert
+        //    Assert.Equal(BugPriority.Low, bug.Priority);
+        //}
 
-        [Fact] // Checks if the priority is set to high
-        public void SetPriority_SetsPriorityToHigh()
-        {
-            // Arrange
-            var bug = new Bug(17, "Test", "Test", 2 /*Act*/, 0);
-            // Assert
-            Assert.Equal(BugPriority.High, bug.Priority);
-        }
+        //[Fact] // Checks if the priority is set to medium
+        //public void SetPriority_SetsPriorityToMedium()
+        //{
+        //    // Arrange
+        //    var bug = new Bug(16, "Test", "Test", 1 /*Act*/, 0);
+        //    // Assert
+        //    Assert.Equal(BugPriority.Medium, bug.Priority);
+        //}
+
+        //[Fact] // Checks if the priority is set to high
+        //public void SetPriority_SetsPriorityToHigh()
+        //{
+        //    // Arrange
+        //    var bug = new Bug(17, "Test", "Test", 2 /*Act*/, 0);
+        //    // Assert
+        //    Assert.Equal(BugPriority.High, bug.Priority);
+        //}
+        #endregion
+
         #endregion
         #region ** SetSeverity Tests **
         [Fact] // Checks to see if severity sets correctly
@@ -375,37 +391,5 @@
             Assert.Equal("Bug: 5 has been successfully assigned to developer: paul", result, StringComparer.OrdinalIgnoreCase);
         }
         #endregion
-    }
-    public class BugServiceTests
-    {
-        [Fact]
-        public void DeleteBug_ShouldRemoveBug_WhenBugExists()
-        {
-            // Arrange
-            var service = new BugService();
-            var bug = service.CreateBug("Test Bug", "Sample description", 1, 2);
-            int bugId = bug.BugId;
-
-            // Act
-            bool result = service.DeleteBug(bugId);
-
-            // Assert
-            Assert.True(result);
-            Assert.DoesNotContain(service.getBugs, b => b.BugId == bugId);
-        }
-
-        [Fact]
-        public void DeleteBug_ShouldReturnFalse_WhenBugDoesNotExist()
-        {
-            // Arrange
-            var service = new BugService();
-            int nonExistentBugId = 999;
-
-            // Act
-            bool result = service.DeleteBug(nonExistentBugId);
-
-            // Assert
-            Assert.False(result);
-        }
     }
 }

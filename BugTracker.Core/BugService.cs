@@ -26,7 +26,9 @@ namespace BugTracker.Core
             _bugs[1].UpdateStatus(BugStatus.Pending);
         }
 
+        #region **Service Methods**
 
+        #region **Changing Data Methods**
         // Method to add a bug to the list of bugs *
         public Bug CreateBug(string title, string description, int priority, int severity)
         {
@@ -45,7 +47,9 @@ namespace BugTracker.Core
             }
             return false;
         }
-      
+        #endregion
+
+        #region **Sorting Methods**
         public List<Bug> SortBugsByTitle()
         {
             List<Bug> UnsortedBugs = _bugs;
@@ -61,7 +65,9 @@ namespace BugTracker.Core
             List<Bug> SortedById = UnsortedBugs;
             return SortedById;
         }
+        #endregion
 
+        #endregion
         // ToDo: Add to developer service should assign to developer and then check if status is open or not, if open set to in progress
 
     }
